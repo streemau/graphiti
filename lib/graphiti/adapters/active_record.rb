@@ -195,11 +195,14 @@ module Graphiti
 
       # (see Adapters::Abstract#count)
       def count(scope, attr)
-        if attr.to_sym == :total
-          scope.distinct.count(:all)
-        else
-          scope.distinct.count(attr)
-        end
+        count_attr =
+          if attr.to_sym == :total
+            :all
+          else
+            attr
+          end
+
+        scope.reorder('').distinct.count(count_attr)
       end
 
       # (see Adapters::Abstract#average)
